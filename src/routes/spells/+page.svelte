@@ -1,25 +1,12 @@
 <script lang="ts">
+  import type { Spell } from "../../types"
 	import { onMount } from "svelte";
   let spells: Spell[] = []
 
-  type Spell = {
-  casting_time: string,
-  classes?: string[],
-  components?: string[],
-  desc?: string,
-  duration: string,
-  higherdesc?: string,
-  id?: number,
-  level?: number,
-  name: string,
-  range: string,
-  }
-
   onMount(async()=>{
-    fetch("http://localhost:4000/spells")
+    fetch("http://192.168.0.161:4000/spells")
     .then(res => res.json())
     .then(data=> spells = data)
-    // .then(data=> console.log(data))
   })
 </script>
 
