@@ -1,38 +1,16 @@
 <script lang="ts">
-  import type { Spell, User } from "../../types"
+  import type { Spell, User } from "./../../types"
   import Icon from '@iconify/svelte'
 	import { onMount } from "svelte";
-	import { actionButton } from "../../tailwindStyles";
-	import userStore from "../../stores/user";
-  interface SpellsResponse {
-    Slots: number
-    Tier: number
-    Spell: Spell[]
-  }
+	import { actionButton } from "./../../tailwindStyles";
+	import userStore from "./../../stores/user";
 
-  let slots: number;
-  let tier: number;
-  let spells: Spell[] = [];
-
-  async function getData() {
-    if(!user) return
-    fetch(`${import.meta.env.VITE_PUBLIC_BACKEND_URL}/getmyspellbook`, {
-      method: "POST",
-      body: JSON.stringify({
-        User: user.username
-      })
-    })
-    .then(async (data)=>{
-        let res: SpellsResponse = await data.json(); 
-        slots = res.Slots
-        tier = res.Tier
-        spells = res.Spell
-        console.log(res)
-      })
-  }
+  let spells: Spell[] = []
 
   onMount(async()=>{
-    getData()
+    fetch(`${import.meta.env.VITE_PUBLIC_BACKEND_URL}/spells`)
+    .then(res => res.json())
+    .then(data=> spells = data)
   })
 
   let user: null | User = null
@@ -40,7 +18,7 @@
 
   async function addSpell(spell: number){
     if(!user) return
-    fetch(`${import.meta.env.VITE_PUBLIC_BACKEND_URL}/addspellbook`, {
+    fetch(`${import.meta.env.VITE_PUBLIC_BACKEND_URL}/addspellbook`,{
       method: "POST",
       body: JSON.stringify({
         Spell: spell,
@@ -52,8 +30,6 @@
       })
   }
 
-
-
 </script>
 
 <svelte:head>
@@ -61,11 +37,6 @@
 </svelte:head>
 
 <ul>
-  <div class="flex flex-row justify-between card variant-filled p-4 m-10">
-    <button on:click={()=>getData()}>Refresh</button>
-    <p class="font-bold">Slots: {slots}</p>
-    <p class="font-bold">Tier: {tier}</p>
-  </div>
   {#each spells as Spell}
     <div class="card variant-filled p-4 m-10">
       <h2>{Spell.name}</h2>

@@ -49,6 +49,15 @@ export enum DetStats {
 	Survival
 }
 
+export interface User {
+	id: number;
+	username: string;
+	email: string;
+	password: string;
+	isLoggedIn: boolean;
+	// Characters *[]Character `json:"characterid,omitempty" db:"characterid"`
+}
+
 export interface Spelllist {
 	id: number;
 	index: string;
@@ -57,7 +66,7 @@ export interface Spelllist {
 }
 
 export interface Character {
-	id: number;
+	id?: number;
 	name: string;
 	lvl: number;
 	race: string;
@@ -72,9 +81,9 @@ export interface Character {
 	party: number;
 	playerid: string;
 
-	abillitie: Abillitie;
-	language: Language;
-	class: Classes;
+	abillitie?: Abillitie;
+	language?: Language;
+	class?: Classes;
 }
 
 export interface Attack {

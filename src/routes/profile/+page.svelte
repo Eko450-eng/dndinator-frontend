@@ -1,13 +1,15 @@
 <script lang="ts">
-	import type { Character } from "../../types";
+	import userStore from "../../stores/user";
+	import type { Character, User } from "../../types";
 	import { onMount } from "svelte";
 
   let character: Character;
-  let userId: number = 1;
+  let user: User;
+  userStore.subscribe(value=>user=value)
 
 
-  onMount(async()=>{
-    fetch(`http://192.168.0.161:4000/character?id=${userId}`)
+  $: onMount(async()=>{
+    fetch(`${import.meta.env.VITE_PUBLIC_BACKEND_URL}/character?id=${user.username}`)
     .then(res => res.json())
     .then(data=> character = data)
   })
@@ -29,5 +31,5 @@
   </div>
 {/if}
 {#if !character}
-  <h1>Please create a character first</h1>
+  <a href="/profile/create">Please create a character first</a>
 {/if}
